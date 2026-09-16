@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bússola IA — fale pelo WhatsApp</title>
+<meta name="description" content="Conte à Bússola IA qual processo você quer automatizar e comece pela conversa gratuita de 20 minutos no WhatsApp.">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<a class="pular-para-conteudo" href="#conteudo">Ir para o conteúdo</a>
+
+<header class="cabecalho">
+  <div class="container cabecalho-interno">
+    <a class="marca" href="index.html">
+      <span class="marca-icone" aria-hidden="true"></span>
+      <span class="marca-texto">
+        <span class="marca-nome">Bússola IA</span>
+        <span class="marca-sub">Agentes de IA para pequenos negócios</span>
+      </span>
+    </a>
+    <nav class="navegacao" aria-label="Navegação principal">
+      <a class="link-nav" href="index.html">Início</a>
+      <a class="link-nav" href="calculadora.html">Simule sua proposta</a>
+      <a class="link-nav" href="perguntas.html">Perguntas frequentes</a>
+    </nav>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="abertura">
+    <div class="container">
+      <span class="selo">20 minutos gratuitos</span>
+      <h1 class="abertura-titulo">Vamos conversar sobre o seu processo?</h1>
+      <p class="abertura-texto">O contato é pelo WhatsApp. Toda conversa começa com 20 minutos gratuitos para entender o que você quer automatizar.</p>
+    </div>
+  </section>
+
+  <section class="secao-alt">
+    <div class="container">
+      <div class="cabecalho-secao">
+        <h2 class="titulo-secao">Deixe sua mensagem pronta</h2>
+        <p class="texto">Preencha os campos. O botão abre o WhatsApp com a mensagem pronta. Depois, você ainda precisa apertar enviar lá.</p>
+      </div>
+
+      <form class="formulario" id="formulario-contato">
+        <div class="formulario-linha">
+          <div class="campo">
+            <label class="rotulo" for="nome">Nome</label>
+            <input class="entrada" id="nome" name="nome" type="text" autocomplete="name" required>
+          </div>
+
+          <div class="campo">
+            <label class="rotulo" for="whatsapp">WhatsApp</label>
+            <input class="entrada" id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" required>
+          </div>
+        </div>
+
+        <fieldset class="grupo-opcoes">
+          <legend class="rotulo">Qual processo você quer automatizar?</legend>
+          <label class="opcao" for="atendimento">
+            <input id="atendimento" name="processo" type="radio" value="Atendimento a clientes" required>
+            <span class="opcao-texto">Atendimento a clientes</span>
+          </label>
+          <label class="opcao" for="agendamento">
+            <input id="agendamento" name="processo" type="radio" value="Agendamento e confirmação">
+            <span class="opcao-texto">Agendamento e confirmação</span>
+          </label>
+          <label class="opcao" for="relatorios">
+            <input id="relatorios" name="processo" type="radio" value="Relatórios e planilhas">
+            <span class="opcao-texto">Relatórios e planilhas</span>
+          </label>
+          <label class="opcao" for="prospeccao">
+            <input id="prospeccao" name="processo" type="radio" value="Prospecção e follow-up">
+            <span class="opcao-texto">Prospecção e follow-up</span>
+          </label>
+          <label class="opcao" for="outro">
+            <input id="outro" name="processo" type="radio" value="Outro">
+            <span class="opcao-texto">Outro</span>
+          </label>
+        </fieldset>
+
+        <div class="campo">
+          <label class="rotulo" for="mensagem">Mensagem</label>
+          <textarea class="entrada" id="mensagem" name="mensagem" rows="5" required></textarea>
+          <p class="ajuda">Conte um pouco sobre o que acontece hoje no seu processo.</p>
+        </div>
+
+        <div>
+          <button class="botao botao-principal" type="submit">Abrir mensagem no WhatsApp</button>
+          <p class="ajuda">O WhatsApp vai abrir em outra aba com a mensagem preenchida. Você precisa apertar enviar por lá.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('formulario-contato').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      const dados = new FormData(this);
+      const mensagem = 'Olá, Marina. Meu nome é ' + dados.get('nome') + '.\n' +
+        'Meu WhatsApp: ' + dados.get('whatsapp') + '.\n' +
+        'Processo que quero automatizar: ' + dados.get('processo') + '.\n' +
+        'Mensagem: ' + dados.get('mensagem');
+      window.open('https://wa.me/5500000000000?text=' + encodeURIComponent(mensagem), '_blank', 'noopener');
+    });
+  </script>
+</main>
+
+<footer class="rodape">
+  <div class="container rodape-grade">
+    <div class="rodape-bloco">
+      <p class="rodape-titulo">Bússola IA</p>
+      <p class="rodape-texto">Consultoria em agentes de IA para pequenos negócios.</p>
+      <p class="rodape-texto">Marina Duarte, consultora.</p>
+    </div>
+    <div class="rodape-bloco">
+      <p class="rodape-titulo">Contato</p>
+      <p class="rodape-texto"><a class="rodape-link" href="https://wa.me/5500000000000">WhatsApp (00) 00000-0000</a></p>
+      <p class="rodape-texto">Porto Claro. Atendimento online para todo o Brasil.</p>
+    </div>
+    <div class="rodape-bloco">
+      <p class="rodape-titulo">Páginas</p>
+      <p class="rodape-texto"><a class="rodape-link" href="index.html">Início</a></p>
+      <p class="rodape-texto"><a class="rodape-link" href="calculadora.html">Simule sua proposta</a></p>
+      <p class="rodape-texto"><a class="rodape-link" href="perguntas.html">Perguntas frequentes</a></p>
+    </div>
+  </div>
+  <div class="container rodape-base">
+    <p class="rodape-texto">Todo pacote começa com uma conversa gratuita de 20 minutos. Pix, cartão em até 6x e boleto para empresas.</p>
+  </div>
+</footer>
+
+</body>
+</html>
