@@ -31,16 +31,119 @@
   <section class="secao">
     <div class="container">
       <div class="cabecalho-secao">
-        <span class="tag">Página em construção</span>
         <h1 class="titulo-secao">Simule sua proposta</h1>
+        <p class="texto">Escolha o que faz sentido para você e veja uma estimativa de investimento e de tempo economizado.</p>
       </div>
-      <div class="aviso">
-        <h2 class="aviso-titulo">Esta página ainda será feita por um agente</h2>
-        <p class="texto">O formulário de simulação e o bloco de resultado ficam aqui dentro do <code>&lt;main&gt;</code>. Um agente vai montá-los usando apenas os fatos de <code>contexto-negocio.md</code> e apenas as classes de <code>estilo.css</code>.</p>
-        <p class="texto">Cabeçalho, navegação e rodapé já estão prontos e não devem ser alterados.</p>
+      <div class="grade-2">
+        <form class="formulario" id="simulador">
+          <div class="campo">
+            <label class="rotulo" for="pacote">Pacote desejado</label>
+            <select class="entrada" id="pacote" name="pacote">
+              <option value="diagnostico">Diagnóstico de processos</option>
+              <option value="agente">Agente de atendimento</option>
+              <option value="mentoria">Mentoria</option>
+            </select>
+          </div>
+
+          <fieldset class="grupo-opcoes">
+            <legend class="rotulo">Processos que quer automatizar</legend>
+            <label class="opcao" for="atendimento">
+              <input id="atendimento" name="processos" type="checkbox" value="atendimento">
+              <span class="opcao-texto">Atendimento a clientes <small>25 horas por mês, na média dos clientes</small></span>
+            </label>
+            <label class="opcao" for="agendamento">
+              <input id="agendamento" name="processos" type="checkbox" value="agendamento">
+              <span class="opcao-texto">Agendamento e confirmação <small>12 horas por mês, na média dos clientes</small></span>
+            </label>
+            <label class="opcao" for="relatorios">
+              <input id="relatorios" name="processos" type="checkbox" value="relatorios">
+              <span class="opcao-texto">Relatórios e planilhas <small>15 horas por mês, na média dos clientes</small></span>
+            </label>
+            <label class="opcao" for="prospeccao">
+              <input id="prospeccao" name="processos" type="checkbox" value="prospeccao">
+              <span class="opcao-texto">Prospecção e follow-up <small>18 horas por mês, na média dos clientes</small></span>
+            </label>
+          </fieldset>
+
+          <div class="campo">
+            <label class="rotulo" for="mentoria">Horas de mentoria por mês</label>
+            <input class="entrada" id="mentoria" name="mentoria" type="number" min="0" max="20" value="0">
+            <p class="ajuda">R$ 400 por hora.</p>
+          </div>
+
+          <button class="botao botao-principal botao-bloco" type="submit">Calcular</button>
+        </form>
+
+        <section class="resultado oculto" id="resultado" aria-live="polite" aria-labelledby="resultado-titulo">
+          <p class="resultado-rotulo" id="resultado-titulo">Sua estimativa</p>
+          <div>
+            <span class="resultado-numero" id="horas-resultado">0</span>
+            <span class="resultado-unidade">horas por mês</span>
+          </div>
+          <p class="resultado-texto" id="frase-resultado"></p>
+          <div class="resultado-linha">
+            <span>Investimento inicial</span>
+            <strong id="investimento-inicial">R$ 0,00</strong>
+          </div>
+          <div class="resultado-linha">
+            <span>Investimento mensal</span>
+            <strong id="investimento-mensal">R$ 0,00</strong>
+          </div>
+          <ul class="resultado-lista" id="lista-processos"></ul>
+          <a class="botao botao-secundario" id="whatsapp" href="https://wa.me/5500000000000" target="_blank" rel="noopener">Pedir proposta pelo WhatsApp</a>
+        </section>
       </div>
     </div>
   </section>
+  <script>
+    (function () {
+      var formulario = document.getElementById('simulador');
+      var resultado = document.getElementById('resultado');
+      var formatoReal = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+      function formatarReal(valor) {
+        return formatoReal.format(valor).replace(/\u00a0/g, ' ');
+      }
+      var pacotes = {
+        diagnostico: { nome: 'Diagnóstico de processos', inicial: 1500, mensal: 0 },
+        agente: { nome: 'Agente de atendimento', inicial: 4500, mensal: 350 },
+        mentoria: { nome: 'Mentoria', inicial: 0, mensal: 0 }
+      };
+      var processos = {
+        atendimento: { nome: 'Atendimento a clientes', horas: 25 },
+        agendamento: { nome: 'Agendamento e confirmação', horas: 12 },
+        relatorios: { nome: 'Relatórios e planilhas', horas: 15 },
+        prospeccao: { nome: 'Prospecção e follow-up', horas: 18 }
+      };
+
+      formulario.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        var pacote = pacotes[document.getElementById('pacote').value];
+        var horasMentoria = Number(document.getElementById('mentoria').value) || 0;
+        horasMentoria = Math.min(20, Math.max(0, horasMentoria));
+        var selecionados = Array.prototype.slice.call(document.querySelectorAll('input[name="processos"]:checked'));
+        var horasEconomizadas = selecionados.reduce(function (total, campo) {
+          return total + processos[campo.value].horas;
+        }, 0);
+        var investimentoMensal = pacote.mensal + (horasMentoria * 400);
+        var processosEscolhidos = selecionados.map(function (campo) {
+          return processos[campo.value];
+        });
+
+        document.getElementById('horas-resultado').textContent = horasEconomizadas;
+        document.getElementById('investimento-inicial').textContent = formatarReal(pacote.inicial);
+        document.getElementById('investimento-mensal').textContent = formatarReal(investimentoMensal);
+        document.getElementById('frase-resultado').textContent = 'Na média dos clientes, os processos selecionados podem economizar cerca de ' + horasEconomizadas + ' horas por mês.';
+        document.getElementById('lista-processos').innerHTML = processosEscolhidos.map(function (processo) {
+          return '<li class="resultado-item"><span>' + processo.nome + '</span><span>' + processo.horas + ' horas</span></li>';
+        }).join('');
+
+        var nomesProcessos = processosEscolhidos.map(function (processo) { return processo.nome; });
+        var resumo = 'Olá, quero pedir uma proposta da Bússola IA. Pacote: ' + pacote.nome + '. Processos: ' + (nomesProcessos.join(', ') || 'nenhum selecionado') + '. Mentoria: ' + horasMentoria + ' horas por mês. Investimento inicial estimado: ' + formatarReal(pacote.inicial) + '. Investimento mensal estimado: ' + formatarReal(investimentoMensal) + '. Horas estimadas economizadas por mês, na média dos clientes: ' + horasEconomizadas + '.';
+        document.getElementById('whatsapp').href = 'https://wa.me/5500000000000?text=' + encodeURIComponent(resumo);
+        resultado.classList.remove('oculto');
+      });
+    }());
+  </script>
 </main>
 
 <footer class="rodape">
